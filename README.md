@@ -323,3 +323,118 @@ This repository only focuses on:
 Fatemeh Mirashrafi
 
 Computer Vision • Autonomous Systems • Robotics • Embedded AI
+
+
+
+
+
+
+-----
+
+
+
+
+
+This is a solid technical solution. Addressing light glare is often the "silent killer" of autonomous navigation systems because computer vision algorithms like Hough Line Transforms are extremely sensitive to high-contrast artifacts.
+
+Since this repository is specifically for the **Noise Removal / Pre-processing** module, your README should focus on the "Clean-In-Place" philosophy: how you take a "dirty" frame and return a "clean" one for the navigation stack.
+
+---
+
+## README.md Proposal
+
+# Road Glare Suppression & Noise Removal for Autonomous Robots
+
+This repository contains the **Pre-processing Module** for an autonomous vehicle navigation system. It is designed to identify and neutralize high-intensity light reflections (glare) from road surfaces that typically cause line-detection algorithms to fail.
+
+### 🔍 The Problem
+
+In outdoor or highly lit indoor environments, light reflects off the road surface, creating "hot spots." These spots have high gradient values, causing:
+
+1. **False Positives:** The robot identifies a glare edge as a lane line.
+2. **Navigation Swerve:** The PID controller receives an incorrect error value based on the glare, causing the car to veer off course.
+
+### 🛠️ The Solution
+
+This module acts as a filter between the raw camera input and the navigation logic. It uses a multi-stage computer vision pipeline to "black out" and then "inpaint" noisy regions.
+
+---
+
+## 🚀 Features
+
+* **Laplacian Contrast Detection:** Uses a Laplacian operator to find areas of sudden, sharp intensity changes (typical of glare).
+* **Morphological Masking:** Dilates and erodes the noise mask to ensure full coverage of the reflection's "halo."
+* **Telea Inpainting:** Uses the `cv2.INPAINT_TELEA` algorithm to fill in the blacked-out noise areas by interpolating surrounding road textures.
+* **Local Brightness Reduction:** Includes a Gamma-correction function to normalize overexposed frames.
+
+---
+
+## 📂 Pipeline Overview
+
+The noise removal process follows these steps:
+
+1. **Grayscale Conversion:** Simplifies the image for gradient analysis.
+2. **Laplacian Filtering:** Calculates the second-order derivative to find sharp transitions.
+3. **Thresholding:** Creates a binary mask where `1` represents glare and `0` represents road.
+4. **Inpainting:** The original image is patched using the mask so that the "holes" left by glare are filled with realistic road color/texture.
+
+---
+
+## 💻 Code Structure
+
+| Function | Description |
+| --- | --- |
+| `black_noise(image)` | The core wrapper that detects glare, masks it, and applies inpainting. |
+| `reduce_local_brightness()` | Adjusts the V-channel in HSV space to handle global overexposure. |
+| `Line_Detection()` | (Reference) Utilizes the cleaned frame to calculate the steering angle. |
+| `pid_control()` | Computes the servo response based on the error from the cleaned frame. |
+
+---
+
+## 🛠 Installation & Usage
+
+### Prerequisites
+
+* Python 3.x
+* OpenCV (`opencv-python` and `opencv-contrib-python`)
+* NumPy
+* PiCamera2 (for Raspberry Pi hardware)
+
+### Running the Pre-processor
+
+To test the noise removal on a static image:
+
+```python
+python glare_removal_test.py
+
+```
+
+To run the real-time robot navigation with noise removal:
+
+```python
+python main_nav.py
+
+```
+
+---
+
+## 🔗 Integration with Navigation
+
+This repository serves as the input provider for **Repository No. 1 (Navigation & Control)**.
+**Input:** Raw RGB Frame
+
+**Processing:** `black_noise()` -> `reduce_local_brightness()`
+
+**Output:** Cleaned Frame -> `Line_Detection()`
+
+---
+
+### Technical Explanation (For your documentation)
+
+Your code uses a very clever combination of **Laplacian Edge Detection** and **Inpainting**. Here is why that matters:
+
+1. **Why Laplacian?** Unlike Sobel filters which find edges in one direction, the Laplacian is an isotropic filter. It finds "blobs" of high-frequency noise (like a bright sun-spot on asphalt) very effectively.
+2. **The Inpainting Logic:** Simply turning glare black isn't enough; an edge-detection algorithm would still "see" the edge of that black circle. By using `cv2.inpaint`, you smooth the transition, effectively making the glare "invisible" to the Hough Line transform used later in your `Line_Detection` function.
+3. **The Gamma Correction:** In your `reduce_local_brightness` function, you use `v_gamma = np.power(v_norm, gamma)`. This is a non-linear adjustment. Instead of making the whole image darker, it pushes the brightest pixels down more aggressively than the mid-tones, preserving the visibility of the actual lane lines.
+
+Does this structure fit the rest of your project's documentation, or would you like to add a section specifically for the hardware setup?
