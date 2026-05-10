@@ -17,6 +17,7 @@ Road reflections caused by sunlight, wet surfaces, high-brightness materials, ca
 
 Traditional methods such as Canny Edge Detection and Hough Line Transform may incorrectly interpret these reflections as valid lane markings. This results in inaccurate lane estimation, unstable steering, and vehicle drift from the intended trajectory.
 
+<img width="708" height="546" alt="6037193665950106864" src="https://github.com/user-attachments/assets/b6ed8168-bb15-45cc-91a7-2b76d96dd7da" />
 
 
 ## Solution
