@@ -89,9 +89,9 @@ Without reflection suppression, glare can create false lane detections and reduc
 
 The implementation runs on a Raspberry Pi–based robotic platform using Python, OpenCV, and NumPy, integrated with PiCamera2, Arduino serial communication, and servo-based Ackermann steering control.
 
-<img width="676" height="558" alt="Screenshot from 2026-05-10 17-09-03" src="https://github.com/user-attachments/assets/952130b9-9e66-491b-b381-4a56cde3174f" />
+<img width="300" height="200" alt="Screenshot from 2026-05-10 17-09-03" src="https://github.com/user-attachments/assets/952130b9-9e66-491b-b381-4a56cde3174f" />
 
-<img width="852" height="655" alt="Screenshot from 2026-05-10 17-09-19" src="https://github.com/user-attachments/assets/b395eaec-2717-481a-9b40-065e6be49f2a" />
+<img width="300" height="200" alt="Screenshot from 2026-05-10 17-09-19" src="https://github.com/user-attachments/assets/b395eaec-2717-481a-9b40-065e6be49f2a" />
 
 
 ## Summary
