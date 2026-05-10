@@ -83,6 +83,8 @@ This results in a cleaner frame with reduced glare interference for downstream p
 
 After preprocessing, the cleaned image is passed to the lane detection and autonomous navigation pipeline.
 
+https://github.com/rmirashrafy/vision-based-lane-navigation-robot
+
 The navigation system uses Gaussian blur, Canny edge detection, Hough line transform, lane averaging, and PID-based steering control to estimate the road center and generate steering commands.
 
 Without reflection suppression, glare can create false lane detections and reduce steering stability. By removing reflective noise before perception, the system becomes significantly more robust in real-world outdoor lighting conditions.
